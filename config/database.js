@@ -2,6 +2,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const db_url = process.env.dB_URL;
 
+console.log("db_url--",db_url);
 // Connect to MongoDB
 mongoose.connect(db_url, {
   useNewUrlParser: true,
