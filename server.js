@@ -3,14 +3,14 @@ const express = require("express");
 var logger = require("morgan");
 const bodyParser = require("body-parser");
 const path = require('path');
-
+const cors = require('cors');
 const port = process.env.PORT;
 const database = require('./config/database');
 const userRouter = require('./routes/index')
 
 const app = express();
 
-
+app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(
