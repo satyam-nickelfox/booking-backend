@@ -52,30 +52,39 @@ router.get("/productlist", async function (req, res, next) {
   }
 });
 router.post("/create-checkout-session", async function (req, res, next) {
-  const session = await stripe.checkout.sessions.create({
-    line_items: [
-      {
-        // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-        price_data: {
-          currency: "inr",
-          product_data: {
-            name: req.body.productName,
+  try {
+    const session = await stripe.checkout.sessions.create({
+      line_items: [
+        {
+          // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+          price_data: {
+            currency: "inr",
+            product_data: {
+              name: req.body.productName,
+            },
+            unit_amount: req.body.productPrice * 100,
           },
-          unit_amount: req.body.productPrice * 100,
+          quantity: 1,
         },
-        quantity: 1,
-      },
-    ],
-    mode: "payment",
-    success_url: `${react_domain}?success=true`,
-    cancel_url: `${react_domain}?canceled=true`,
-  });
-  res.status(200).json({
-    status: 200,
-    data: { session },
-    message: "Product finds Successfully....",
-    error: false,
-  });
+      ],
+      mode: "payment",
+      success_url: `${react_domain}?success=true`,
+      cancel_url: `${react_domain}?canceled=true`,
+    });
+    res.status(200).json({
+      status: 200,
+      data: { session },
+      message: "checkout success....",
+      error: false,
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: 404,
+      data: { error },
+      message: "Something went wrong....",
+      error: true,
+    });
+  }
   //   let listProduct = await productController.listProduct();
   //   if (listProduct) {
   //     res.status(200).json({
