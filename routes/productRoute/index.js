@@ -68,8 +68,8 @@ router.post("/create-checkout-session", async function (req, res, next) {
         },
       ],
       mode: "payment",
-      success_url: `${react_domain}product/success`,
-      cancel_url: `${react_domain}product/fail`,
+      success_url: `${react_domain}user/product/success`,
+      cancel_url: `${react_domain}user/product/fail`,
     });
     res.status(200).json({
       status: 200,
