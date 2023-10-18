@@ -7,8 +7,7 @@ const stripe = require("stripe")(secret_key);
 let productController = require("../../controllers/product.controller");
 const passport = require("passport");
 require("../../config/passport")(passport);
-const endpointSecret =
-  "whsec_04bfa6506e62065c35fcce83b791bbb0851d483e72f8af4e422ce4a02e2db18a";
+const endpointSecret = process.env.END_POINT_SECRET;
 
 router.post("/addproduct", async function (req, res, next) {
   if (
@@ -107,41 +106,37 @@ router.post("/webhook", (request, response) => {
   try {
     event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
   } catch (err) {
+    console.log("error",err);
     response.status(400).send(`Webhook Error: ${err.message}`);
     return;
   }
 
   // Handle the event
-  switch (event.type) {
-    case "checkout.session.async_payment_failed":
-      const checkoutSessionAsyncPaymentFailed = event.data.object;
-      // Then define and call a function to handle the event checkout.session.async_payment_failed
-      break;
-    case "checkout.session.async_payment_succeeded":
-      const checkoutSessionAsyncPaymentSucceeded = event.data.object;
-      // Then define and call a function to handle the event checkout.session.async_payment_succeeded
-      break;
-    case "checkout.session.completed":
-      const checkoutSessionCompleted = event.data.object;
-      // Then define and call a function to handle the event checkout.session.completed
-      break;
-    case "checkout.session.expired":
-      const checkoutSessionExpired = event.data.object;
-      // Then define and call a function to handle the event checkout.session.expired
-      break;
-    // ... handle other event types
-    default:
-      console.log(`Unhandled event type ${event.type}`);
-  }
+  // switch (event.type) {
+  //   case "checkout.session.async_payment_failed":
+  //     const checkoutSessionAsyncPaymentFailed = event.data.object;
+  //     // Then define and call a function to handle the event checkout.session.async_payment_failed
+  //     break;
+  //   case "checkout.session.async_payment_succeeded":
+  //     const checkoutSessionAsyncPaymentSucceeded = event.data.object;
+  //     // Then define and call a function to handle the event checkout.session.async_payment_succeeded
+  //     break;
+  //   case "checkout.session.completed":
+  //     const checkoutSessionCompleted = event.data.object;
+  //     // Then define and call a function to handle the event checkout.session.completed
+  //     break;
+  //   case "checkout.session.expired":
+  //     const checkoutSessionExpired = event.data.object;
+  //     // Then define and call a function to handle the event checkout.session.expired
+  //     break;
+  //   // ... handle other event types
+  //   default:
+  //     console.log(`Unhandled event type ${event.type}`);
+  // }
 
   console.log("event.data.object", event.data.object);
   // Return a 200 response to acknowledge receipt of the event
-  response.status(200).json({
-    status: 200,
-    data: {},
-    message: "webhook success....",
-    error: false,
-  });
+  response.send().end()
 });
 
 module.exports = router;
