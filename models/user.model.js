@@ -10,6 +10,9 @@ const userSchema =mongoose.Schema({
     password : {
         type :String,
     },
+    role: {
+        type: String,
+    },
     cd : {
         type :String,
     }

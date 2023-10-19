@@ -31,6 +31,7 @@ module.exports = {
                 email: data.email,
                 full_name: data.full_name,
                 password : hashedPassword,
+                role : data?.role ? data?.role : "user",
                 cd: new Date()
             })
             await user.save();
