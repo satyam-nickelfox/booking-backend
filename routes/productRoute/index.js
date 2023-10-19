@@ -5,6 +5,7 @@ const secret_key = process.env.STRIPE_SECRET_KEY;
 const react_domain = process.env.REACT_DOMAIN;
 const stripe = require("stripe")(secret_key);
 let productController = require("../../controllers/product.controller");
+let transctionController = require("../../controllers/transction.controller");
 const passport = require("passport");
 require("../../config/passport")(passport);
 const endpointSecret = process.env.END_POINT_SECRET;
@@ -80,6 +81,19 @@ router.post(
         success_url: `${react_domain}user/product/success`,
         cancel_url: `${react_domain}user/product/fail`,
       });
+      if (session) {
+        let body = {
+          userId: req.user._id,
+          productId: req.body.productId,
+          paymentId: session.id,
+          productPrice: req.body.productPrice,
+          paymentStatus: session.payment_status,
+          // paymentType: session.payment_method_types[0],
+          paymentType: "card",
+        };
+        await transctionController.createTransction(body)
+      }
+
       res.status(200).json({
         status: 200,
         data: { session },
