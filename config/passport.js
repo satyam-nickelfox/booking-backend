@@ -11,9 +11,8 @@ module.exports = function (passport) {
 
   passport.use(
     new JwtStrategy(opts, function (jwt_payload, done) {
-      //    console.log("auth-----",jwt_playload);
       model
-        .findOne({ id: jwt_payload.id })
+        .findOne({ _id: jwt_payload._id })
         .then((user) => {
           if (user) {
             done(null, user);

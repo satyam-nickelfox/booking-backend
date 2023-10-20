@@ -91,7 +91,7 @@ router.post(
           // paymentType: session.payment_method_types[0],
           paymentType: "card",
         };
-        await transctionController.createTransction(body)
+        await transctionController.createTransction(body);
       }
 
       res.status(200).json({
@@ -157,4 +157,37 @@ router.post(
   }
 );
 
+// get all transaction ================
+
+router.get(
+  "/alltransction",
+  passport.authenticate("jwt", { session: false }),
+  async function (req, res, next) {
+    try {
+      let listTransaction = await transctionController.getAllTransactions();
+      if (listTransaction && listTransaction.length > 0) {
+        res.status(200).json({
+          status: 200,
+          data: { listTransaction },
+          message: "Transaction finds Successfully....",
+          error: false,
+        });
+      } else {
+        res.status(404).json({
+          status: 404,
+          data: {},
+          message: "Something Went Wrong..",
+          error: false,
+        });
+      }
+    } catch (error) {
+      res.status(404).json({
+        status: 404,
+        data: error,
+        message: "Something Went Wrong..",
+        error: true,
+      });
+    }
+  }
+);
 module.exports = router;
